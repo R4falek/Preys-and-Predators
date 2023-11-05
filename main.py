@@ -6,6 +6,7 @@ import time
 from Simulation import Simulation
 
 WIDTH, HEIGHT = 1920, 1020
+# WIDTH, HEIGHT = 1500, 800
 background_colour = (134, 212, 252)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)

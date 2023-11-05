@@ -29,7 +29,7 @@ class Simulation:
 
     def update(self):
         for prey in self.preys:
-            # self.split_handle(prey)
+            self.split_handle(prey)
             prey.update(self.space)
             self.overflow_handle(prey)
         for predator in self.predators:

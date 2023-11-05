@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 import pymunk
 from Creature import Creature
@@ -5,8 +7,8 @@ from Creature import Creature
 
 class Prey(Creature):
 
-    def __init__(self, space):
-        super().__init__()
+    def __init__(self, space, brain=None):
+        super().__init__(brain)
         self.who_am_I = 'Prey'
         self.energy_renewal = 1
         self.max_split = 600
@@ -20,6 +22,7 @@ class Prey(Creature):
         self.pymunk_object.filter = pymunk.ShapeFilter(categories=self.shape_category)
         self.vision_distances = np.full(self.vision_lines_count, self.vision_range)
         self.clicked = False
+        self.split = random.randint(0, self.max_split // 2)
 
     def update(self, space):
         self.energy_update(False)
@@ -28,6 +31,8 @@ class Prey(Creature):
         self.vision_update(space)
 
     def split_update(self):
+        self.brain.show_model(self.brain, self.vision_distances)
+        input(r)
         if self.split < self.max_split:
             self.split += 1
         else:
@@ -45,7 +50,7 @@ class Prey(Creature):
         print('Vision ', self.vision_distances)
 
     def split_child(self, space):
-        child = Prey(space)
+        child = Prey(space, self.brain)
         child.generation = self.generation + 1
         child.pymunk_object.body.position = self.pymunk_object.body.position
         self.children += 1

@@ -5,8 +5,8 @@ from Creature import Creature
 
 class Predator(Creature):
 
-    def __init__(self, space):
-        super().__init__()
+    def __init__(self, space, brain=None):
+        super().__init__(brain)
         self.who_am_I = 'Predator'
         self.energy_renewal = 400
         self.max_split = 2
@@ -35,16 +35,17 @@ class Predator(Creature):
             self.digestion -= 1
 
     def eat(self):
-        self.energy += self.energy_renewal
         self.eaten += 1
+
+        if self.digestion == 0:
+            self.energy += self.energy_renewal
         if self.energy > self.max_energy:
             self.energy = self.max_energy
 
-        if self.digestion == 0:
-            if self.split < self.max_split:
-                self.split += 1
-            else:
-                self.split = 0
+        if self.split < self.max_split:
+            self.split += 1
+        else:
+            self.split = 0
 
         self.digestion = self.max_digestion
 
@@ -59,7 +60,7 @@ class Predator(Creature):
         print('Vision ', self.vision_distances)
 
     def split_child(self, space):
-        child = Predator(space)
+        child = Predator(space, self.brain)
         child.generation = self.generation + 1
         child.pymunk_object.body.position = self.pymunk_object.body.position
         self.split = 0

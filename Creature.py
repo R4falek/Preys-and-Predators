@@ -9,7 +9,7 @@ from Utils import calculate_coordinates, calculate_distance
 
 class Creature:
 
-    def __init__(self):
+    def __init__(self, brain=None):
         self.VEL_FORCE = 500
         self.ANGLE_FORCE = 0.1
         self.BRAKE_RATIO = 0.85
@@ -37,8 +37,11 @@ class Creature:
         self.controlled = False
         self.vision_lines = []
         self.vision_distances = []
-        self.brain = None
-        self.create_brain()
+        if brain:
+            self.brain = brain
+        else:
+            self.brain = None
+            self.create_brain()
 
     @abstractmethod
     def update(self, screen):
@@ -63,20 +66,20 @@ class Creature:
         self.brake_movement_handle()
 
         if not self.controlled:
-            pass
-            # input_tensor = torch.tensor(self.vision_distances, dtype=torch.float32).unsqueeze(0)
-            # with torch.no_grad():
-            #     output_tensor = self.brain(input_tensor)
-            #
-            # output_list = output_tensor.squeeze().tolist()
-            #
-            # if output_list[0] > 0.5:
-            #     self.pymunk_object.body.angle -= self.ANGLE_FORCE
-            # if output_list[1] > 0.5 and self.energy >= self.energy_cost:
-            #     self.pymunk_object.body.apply_impulse_at_local_point((self.VEL_FORCE, 0))
-            #     self.energy_update(True)
-            # if output_list[2] > 0.5:
-            #     self.pymunk_object.body.angle += self.ANGLE_FORCE
+            # pass
+            input_tensor = torch.tensor(self.vision_distances, dtype=torch.float32).unsqueeze(0)
+            with torch.no_grad():
+                output_tensor = self.brain(input_tensor)
+
+            output_list = output_tensor.squeeze().tolist()
+
+            if output_list[0] > 0.5:
+                self.pymunk_object.body.angle -= self.ANGLE_FORCE
+            if output_list[1] > 0.5 and self.energy >= self.energy_cost:
+                self.pymunk_object.body.apply_impulse_at_local_point((self.VEL_FORCE, 0))
+                self.energy_update(True)
+            if output_list[2] > 0.5:
+                self.pymunk_object.body.angle += self.ANGLE_FORCE
         else:
             keys_pressed = pygame.key.get_pressed()
             self.movement_handle_keyboard(keys_pressed)
