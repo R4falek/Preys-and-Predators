@@ -26,7 +26,7 @@ pygame.display.set_caption('Prey and Predator')
 
 tile = pygame.image.load("assets/tile.jpg")
 tile_position = (0, 0)
-TILES_SIZE = (3, 3)
+TILES_SIZE = (2, 2)
 border_position = [tile_position[0], tile_position[1], TILES_SIZE[0] * tile.get_width(),
                    TILES_SIZE[1] * tile.get_height()]
 

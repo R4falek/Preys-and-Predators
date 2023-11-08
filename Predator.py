@@ -9,10 +9,10 @@ class Predator(Creature):
         super().__init__(brain)
         self.who_am_I = 'Predator'
         self.energy_renewal = 400
-        self.max_split = 2
+        self.max_split = 3
         self.max_digestion = 120
-        self.angle_between_vision_lines = 5
-        self.vision_range = 150
+        self.angle_between_vision_lines = 2
+        self.vision_range = 300
         self.start_position = (300, 300)
         self.color = (255, 0, 0, 100)
         self.digestion = 0
@@ -60,7 +60,7 @@ class Predator(Creature):
         print('Vision ', self.vision_distances)
 
     def split_child(self, space):
-        child = Predator(space, self.brain)
+        child = Predator(space, self.brain.modify_weights(1))
         child.generation = self.generation + 1
         child.pymunk_object.body.position = self.pymunk_object.body.position
         self.split = 0

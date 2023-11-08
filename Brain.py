@@ -1,6 +1,5 @@
 import torch.nn as nn
 import torch
-from torchviz import make_dot
 
 
 class Brain(nn.Module):
@@ -15,8 +14,3 @@ class Brain(nn.Module):
         x = torch.relu(self.fc2(x))
         x = torch.sigmoid(self.fc3(x))
         return x
-
-    def show_model(self, model, input_vector):
-        vision_tensor = torch.tensor(input_vector, dtype=torch.float32).unsqueeze(0)
-        dot = make_dot(model(vision_tensor), params=dict(model.named_parameters()))
-        dot.render("my_network", format="png")

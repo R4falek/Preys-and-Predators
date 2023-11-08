@@ -10,11 +10,12 @@ def coll_begin(arbiter, space, data):
         if shape_0.creature.who_am_I != shape_1.creature.who_am_I:
             if shape_0.creature.who_am_I == 'Prey':
                 shape_0.creature.remove(space)
-                data['Preys'].remove(shape_0.creature)
+                if shape_0.creature in data['Preys']:
+                    data['Preys'].remove(shape_0.creature)
                 shape_1.creature.eat()
             else:
                 shape_1.creature.remove(space)
-                if shape_1.creature:
+                if shape_1.creature in data['Preys']:
                     data['Preys'].remove(shape_1.creature)
                 shape_0.creature.eat()
     return True

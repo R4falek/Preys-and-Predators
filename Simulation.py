@@ -11,8 +11,8 @@ class Simulation:
         self.space = space
         self.max_prey_count = 100
         self.max_predator_count = 100
-        self.prey_init_count = 2
-        self.predator_init_count = 1
+        self.prey_init_count = 20
+        self.predator_init_count = 2
         self.predators = []
         self.preys = []
         self.preys_history_count = []

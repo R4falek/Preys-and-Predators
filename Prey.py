@@ -10,10 +10,10 @@ class Prey(Creature):
     def __init__(self, space, brain=None):
         super().__init__(brain)
         self.who_am_I = 'Prey'
-        self.energy_renewal = 1
+        self.energy_renewal = 5
         self.max_split = 600
-        self.angle_between_vision_lines = 30
-        self.vision_range = 150
+        self.angle_between_vision_lines = 20
+        self.vision_range = 450
         self.start_position = (200, 200)
         self.color = (0, 255, 0, 100)
         self.shape_category = 0b01
@@ -31,8 +31,6 @@ class Prey(Creature):
         self.vision_update(space)
 
     def split_update(self):
-        self.brain.show_model(self.brain, self.vision_distances)
-        input(r)
         if self.split < self.max_split:
             self.split += 1
         else:
@@ -50,7 +48,7 @@ class Prey(Creature):
         print('Vision ', self.vision_distances)
 
     def split_child(self, space):
-        child = Prey(space, self.brain)
+        child = Prey(space, self.brain.modify_weights(1))
         child.generation = self.generation + 1
         child.pymunk_object.body.position = self.pymunk_object.body.position
         self.children += 1

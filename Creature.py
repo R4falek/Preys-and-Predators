@@ -1,9 +1,11 @@
+import random
 from abc import abstractmethod
 import pygame
 import pymunk
 import torch
 
 from Brain import Brain
+from MyBrain import MyBrain
 from Utils import calculate_coordinates, calculate_distance
 
 
@@ -23,7 +25,7 @@ class Creature:
         self.shape_elasticity = 0.4
         self.start_position = None
         self.color = None
-        self.vision_lines_count = 10
+        self.vision_lines_count = 15
         self.angle_between_vision_lines = None
         self.vision_range = None
         self.shape_category = None
@@ -60,22 +62,25 @@ class Creature:
         ...
 
     def create_brain(self):
-        self.brain = Brain()
+        # self.brain = Brain()
+        self.brain = MyBrain(self.vision_lines_count)
 
     def movement_handle(self):
         self.brake_movement_handle()
 
         if not self.controlled:
-            # pass
-            input_tensor = torch.tensor(self.vision_distances, dtype=torch.float32).unsqueeze(0)
-            with torch.no_grad():
-                output_tensor = self.brain(input_tensor)
+            output_list = self.brain.forward(self.vision_distances)
 
-            output_list = output_tensor.squeeze().tolist()
+            # input_tensor = torch.tensor(self.vision_distances, dtype=torch.float32).unsqueeze(0)
+            # with torch.no_grad():
+            #     output_tensor = self.brain(input_tensor)
+            #
+            # output_list = output_tensor.squeeze().tolist()
 
             if output_list[0] > 0.5:
                 self.pymunk_object.body.angle -= self.ANGLE_FORCE
             if output_list[1] > 0.5 and self.energy >= self.energy_cost:
+            # if True and self.energy >= self.energy_cost:
                 self.pymunk_object.body.apply_impulse_at_local_point((self.VEL_FORCE, 0))
                 self.energy_update(True)
             if output_list[2] > 0.5:
@@ -87,6 +92,7 @@ class Creature:
     def create_pymunk_object(self, space, radius, mass):
         body = pymunk.Body()
         body.position = self.start_position
+        body.angle = random.random()
         shape = pymunk.Circle(body, radius)
         shape.creature = self
         shape.mass = mass
@@ -106,7 +112,7 @@ class Creature:
             dest_cords = calculate_coordinates(self.pymunk_object.body, self.vision_range, angle)
             contact_info = space.segment_query_first(self.pymunk_object.body.position, dest_cords, 1, pymunk.ShapeFilter(mask=pymunk.ShapeFilter.ALL_MASKS() ^ self.shape_category))
 
-            if self.clicked:
+            if True:
                 if contact_info:
                     line = pymunk.Segment(space.static_body, self.pymunk_object.body.position, contact_info.point, 0.5)
                     self.vision_distances[i] = calculate_distance(self.pymunk_object.body.position, contact_info.point) - 25
@@ -115,7 +121,7 @@ class Creature:
                     self.vision_distances[i] = self.vision_range
 
                 line.sensor = True
-                line.color = (128, 128, 128, 1)
+                line.color = (128, 128, 128, 0)
                 self.vision_lines.append(line)
                 space.add(line)
 
