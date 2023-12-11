@@ -7,14 +7,14 @@ from Creature import Creature
 
 class Prey(Creature):
 
-    def __init__(self, space, brain=None):
+    def __init__(self, space, brain=None, spawn_range=800):
         super().__init__(brain)
         self.who_am_I = 'Prey'
         self.energy_renewal = 5
         self.max_split = 600
-        self.angle_between_vision_lines = 20
+        self.angle_between_vision_lines = 16
         self.vision_range = 450
-        self.start_position = (200, 200)
+        self.start_position = (random.randint(0, spawn_range), random.randint(0, spawn_range))
         self.color = (0, 255, 0, 100)
         self.shape_category = 0b01
 

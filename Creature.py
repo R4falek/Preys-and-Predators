@@ -1,10 +1,8 @@
+import math
 import random
 from abc import abstractmethod
 import pygame
 import pymunk
-import torch
-
-from Brain import Brain
 from MyBrain import MyBrain
 from Utils import calculate_coordinates, calculate_distance
 
@@ -13,7 +11,7 @@ class Creature:
 
     def __init__(self, brain=None):
         self.VEL_FORCE = 500
-        self.ANGLE_FORCE = 0.1
+        self.ANGLE_FORCE = 0.12
         self.BRAKE_RATIO = 0.85
         self.who_am_I = None
         self.max_energy = 10000
@@ -25,7 +23,7 @@ class Creature:
         self.shape_elasticity = 0.4
         self.start_position = None
         self.color = None
-        self.vision_lines_count = 15
+        self.vision_lines_count = 20
         self.angle_between_vision_lines = None
         self.vision_range = None
         self.shape_category = None
@@ -46,7 +44,7 @@ class Creature:
             self.create_brain()
 
     @abstractmethod
-    def update(self, screen):
+    def update(self, space):
         ...
 
     @abstractmethod
@@ -71,11 +69,14 @@ class Creature:
         if not self.controlled:
             output_list = self.brain.forward(self.vision_distances)
 
-            # input_tensor = torch.tensor(self.vision_distances, dtype=torch.float32).unsqueeze(0)
-            # with torch.no_grad():
-            #     output_tensor = self.brain(input_tensor)
-            #
-            # output_list = output_tensor.squeeze().tolist()
+            # if output_list[0] > 0.5:
+            #     self.pymunk_object.body.angle -= self.ANGLE_FORCE
+            # if output_list[1] > 0.5 and self.energy >= self.energy_cost:
+            # # if True and self.energy >= self.energy_cost:
+            #     self.pymunk_object.body.apply_impulse_at_local_point((self.VEL_FORCE, 0))
+            #     self.energy_update(True)
+            # if output_list[2] > 0.5:
+            #     self.pymunk_object.body.angle += self.ANGLE_FORCE
 
             if output_list[0] > 0.5:
                 self.pymunk_object.body.angle -= self.ANGLE_FORCE
@@ -85,6 +86,7 @@ class Creature:
                 self.energy_update(True)
             if output_list[2] > 0.5:
                 self.pymunk_object.body.angle += self.ANGLE_FORCE
+
         else:
             keys_pressed = pygame.key.get_pressed()
             self.movement_handle_keyboard(keys_pressed)
@@ -92,7 +94,7 @@ class Creature:
     def create_pymunk_object(self, space, radius, mass):
         body = pymunk.Body()
         body.position = self.start_position
-        body.angle = random.random()
+        body.angle = random.random() * 2 * math.pi
         shape = pymunk.Circle(body, radius)
         shape.creature = self
         shape.mass = mass
@@ -117,11 +119,12 @@ class Creature:
                     line = pymunk.Segment(space.static_body, self.pymunk_object.body.position, contact_info.point, 0.5)
                     self.vision_distances[i] = calculate_distance(self.pymunk_object.body.position, contact_info.point) - 25
                 else:
-                    line = pymunk.Segment(space.static_body, self.pymunk_object.body.position, dest_cords, 1)
+                    line = pymunk.Segment(space.static_body, self.pymunk_object.body.position, dest_cords, 0)
                     self.vision_distances[i] = self.vision_range
 
                 line.sensor = True
-                line.color = (128, 128, 128, 0)
+                line.color = pygame.Color("grey")
+                # line.color = (0, 0, 0, 0)
                 self.vision_lines.append(line)
                 space.add(line)
 

@@ -1,8 +1,9 @@
+import pygame.draw
 import pymunk
 
 from CollisionCollbacks import coll_begin
-from Prey import Prey
 from Predator import Predator
+from Prey import Prey
 
 
 class Simulation:
@@ -43,7 +44,8 @@ class Simulation:
 
     def scaling(self, scale):
         self.scale = scale
-        self.border_position = [i / scale for i in self.border_position]
+        # self.border_position = [i / scale for i in self.border_position]
+        # pygame.draw.rect(screen, (10, 200, 20), (self.border_position[0], self.border_position[1], self.border_position[2], self.border_position[3]), 5)
 
     def update_history_count(self):
         self.preys_history_count.append(len(self.preys))
@@ -73,11 +75,11 @@ class Simulation:
 
     def init_creatures(self):
         for i in range(self.prey_init_count):
-            prey = Prey(self.space)
+            prey = Prey(self.space, spawn_range=self.border_position[3])
             self.preys.append(prey)
 
         for i in range(self.predator_init_count):
-            predator = Predator(self.space)
+            predator = Predator(self.space, spawn_range=self.border_position[3])
             self.predators.append(predator)
 
     def overflow_handle(self, creature):

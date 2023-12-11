@@ -1,19 +1,21 @@
 import numpy as np
 import pymunk
+import random
+
 from Creature import Creature
 
 
 class Predator(Creature):
 
-    def __init__(self, space, brain=None):
+    def __init__(self, space, brain=None, spawn_range=800):
         super().__init__(brain)
         self.who_am_I = 'Predator'
         self.energy_renewal = 400
         self.max_split = 3
         self.max_digestion = 120
-        self.angle_between_vision_lines = 2
+        self.angle_between_vision_lines = 1
         self.vision_range = 300
-        self.start_position = (300, 300)
+        self.start_position = (random.randint(0, spawn_range), random.randint(0, spawn_range))
         self.color = (255, 0, 0, 100)
         self.digestion = 0
         self.shape_category = 0b10

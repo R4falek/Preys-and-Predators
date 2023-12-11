@@ -27,6 +27,7 @@ pygame.display.set_caption('Prey and Predator')
 tile = pygame.image.load("assets/tile.jpg")
 tile_position = (0, 0)
 TILES_SIZE = (2, 2)
+
 border_position = [tile_position[0], tile_position[1], TILES_SIZE[0] * tile.get_width(),
                    TILES_SIZE[1] * tile.get_height()]
 
@@ -190,9 +191,9 @@ def main():
                     simulation.click_creature(None)
             elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0 and SCALE < 2:
-                    SCALE += 0.1
-                elif event.y < 0 and SCALE > 0.4:
-                    SCALE -= 0.1
+                    SCALE += 0.1 * SCALE
+                elif event.y < 0:
+                    SCALE -= 0.1 * SCALE
 
             mouse_scaled = (pygame.mouse.get_pos()[0] / SCALE, pygame.mouse.get_pos()[1] / SCALE)
             query_info_hover = space.point_query_nearest(mouse_scaled, 0, pymunk.ShapeFilter())
