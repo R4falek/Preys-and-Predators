@@ -15,7 +15,7 @@ WHITE = (255, 255, 255)
 BLUE = (100, 100, 255)
 ORANGE = (225, 145, 45)
 
-FPS = 60
+FPS = 20
 dt = 1 / FPS
 ticks = 0
 start_time = time.time()
@@ -26,7 +26,7 @@ pygame.display.set_caption('Prey and Predator')
 
 tile = pygame.image.load("assets/tile.jpg")
 tile_position = (0, 0)
-TILES_SIZE = (2, 2)
+TILES_SIZE = (6, 5)
 
 border_position = [tile_position[0], tile_position[1], TILES_SIZE[0] * tile.get_width(),
                    TILES_SIZE[1] * tile.get_height()]
@@ -34,8 +34,15 @@ border_position = [tile_position[0], tile_position[1], TILES_SIZE[0] * tile.get_
 MOVE_SPEED = 20
 SCALE = 1
 
-space = pymunk.Space()
+filename_log = 'simulation_logs.txt'
+
+with open(filename_log, 'w') as file:
+    # Write the numbers in a row
+    file.write("Start\n")
+
+space = pymunk.Space(threaded=True)
 space.gravity = (0, 0)
+space.threads = 2
 simulation = Simulation(space, border_position)
 take_control_but = pygame.Rect(2 * tile.get_width() + 50, 600, 150, 40)
 
@@ -207,6 +214,9 @@ def main():
         space.step(dt)
         timer_update()
         simulation.update()
+
+        if ticks % 10:
+            simulation.log(filename_log)
 
     pygame.quit()
 

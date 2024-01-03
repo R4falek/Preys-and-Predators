@@ -10,15 +10,18 @@ class Predator(Creature):
     def __init__(self, space, brain=None, spawn_range=800):
         super().__init__(brain)
         self.who_am_I = 'Predator'
-        self.energy_renewal = 400
+        self.energy_renewal = 2000
         self.max_split = 3
-        self.max_digestion = 120
-        self.angle_between_vision_lines = 1
-        self.vision_range = 300
+        self.max_digestion = 100
+        self.angle_between_vision_lines = 2
+        self.vision_range = 550
         self.start_position = (random.randint(0, spawn_range), random.randint(0, spawn_range))
         self.color = (255, 0, 0, 100)
         self.digestion = 0
         self.shape_category = 0b10
+        self.VEL_FORCE = 600
+        self.ANGLE_FORCE = 0.2
+        self.BRAKE_RATIO = 0.9
 
         self.eaten = 0
         self.pymunk_object = self.create_pymunk_object(space, self.radius, self.mass)
@@ -54,6 +57,8 @@ class Predator(Creature):
     def energy_update(self, is_moving):
         if self.energy >= self.energy_cost and is_moving:
             self.energy -= self.energy_cost
+        else:
+            self.energy -= self.energy_cost // 2
 
     def print_stats(self):
         print('Energy ', self.energy)

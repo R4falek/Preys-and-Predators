@@ -25,3 +25,8 @@ def calculate_coordinates(body, length, angle):
     vector = pymunk.Vec2d(x, y).rotated(body.angle)
 
     return vector.__add__(body.position)
+
+
+def append_row_to_file(filename, number1, number2):
+    with open(filename, 'a') as file:
+        file.write(f"{number1},{number2}\n")

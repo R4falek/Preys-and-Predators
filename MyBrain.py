@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from numba import jit
 
 
 class MyBrain:
@@ -53,4 +54,5 @@ class MyBrain:
         for layer in range(len(self.model)):
             for i in range(int(len(self.model[layer]))):
                 for j in range(int(len(self.model[layer][i]))):
-                    self.model[layer][i][j] = random.uniform(-1, 1)
+                    if random.random() < 0.5:
+                        self.model[layer][i][j] = random.uniform(-1, 1)

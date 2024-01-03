@@ -14,7 +14,7 @@ class Creature:
         self.ANGLE_FORCE = 0.12
         self.BRAKE_RATIO = 0.85
         self.who_am_I = None
-        self.max_energy = 10000
+        self.max_energy = 7000
         self.energy_cost = 10
         self.energy_renewal = None
         self.max_split = None
@@ -78,13 +78,13 @@ class Creature:
             # if output_list[2] > 0.5:
             #     self.pymunk_object.body.angle += self.ANGLE_FORCE
 
-            if output_list[0] > 0.5:
+            if output_list[0] > 0.7:
                 self.pymunk_object.body.angle -= self.ANGLE_FORCE
-            if output_list[1] > 0.5 and self.energy >= self.energy_cost:
+            if output_list[1] > 0.7 and self.energy >= self.energy_cost:
             # if True and self.energy >= self.energy_cost:
                 self.pymunk_object.body.apply_impulse_at_local_point((self.VEL_FORCE, 0))
                 self.energy_update(True)
-            if output_list[2] > 0.5:
+            if output_list[2] > 0.7:
                 self.pymunk_object.body.angle += self.ANGLE_FORCE
 
         else:

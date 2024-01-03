@@ -10,8 +10,8 @@ class Prey(Creature):
     def __init__(self, space, brain=None, spawn_range=800):
         super().__init__(brain)
         self.who_am_I = 'Prey'
-        self.energy_renewal = 5
-        self.max_split = 600
+        self.energy_renewal = 200
+        self.max_split = 300
         self.angle_between_vision_lines = 16
         self.vision_range = 450
         self.start_position = (random.randint(0, spawn_range), random.randint(0, spawn_range))
